@@ -74,7 +74,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
   await authService.forgotPassword(req.body.email);
 
   sendSuccess(res, {
-    message: "If the email exists, a password reset link has been sent"
+    message: "If the email exists, a password reset OTP has been sent"
   });
 });
 
@@ -88,11 +88,19 @@ const resetPassword = asyncHandler(async (req, res) => {
 });
 
 const verifyEmail = asyncHandler(async (req, res) => {
-  const user = await authService.verifyEmail(req.body.token);
+  const user = await authService.verifyEmail(req.body);
 
   sendSuccess(res, {
     message: "Email verified successfully",
     data: user
+  });
+});
+
+const resendVerificationOtp = asyncHandler(async (req, res) => {
+  await authService.resendVerificationOtp(req.body.email);
+
+  sendSuccess(res, {
+    message: "If the account exists and is not verified, a new verification OTP has been sent"
   });
 });
 
@@ -146,6 +154,7 @@ module.exports = {
   forgotPassword,
   resetPassword,
   verifyEmail,
+  resendVerificationOtp,
   changePassword,
   me,
   deactivate,

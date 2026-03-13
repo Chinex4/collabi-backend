@@ -8,6 +8,7 @@ const {
   loginValidator,
   forgotPasswordValidator,
   resetPasswordValidator,
+  verifyEmailValidator,
   changePasswordValidator
 } = require("../validators/authValidator");
 
@@ -26,7 +27,13 @@ router.post("/admin/login", loginValidator, validate, authController.adminLogin)
 router.post("/refresh", authController.refresh);
 router.post("/forgot-password", forgotPasswordValidator, validate, authController.forgotPassword);
 router.post("/reset-password", resetPasswordValidator, validate, authController.resetPassword);
-router.post("/verify-email", authController.verifyEmail);
+router.post("/verify-email", verifyEmailValidator, validate, authController.verifyEmail);
+router.post(
+  "/resend-verification-otp",
+  forgotPasswordValidator,
+  validate,
+  authController.resendVerificationOtp
+);
 router.post("/logout", protect, authController.logout);
 router.post("/change-password", protect, changePasswordValidator, validate, authController.changePassword);
 router.get("/me", protect, authController.me);

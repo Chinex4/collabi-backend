@@ -27,6 +27,8 @@ const sanitizeUser = (user) => ({
   createdAt: user.createdAt
 });
 
+const generateOtp = () => String(crypto.randomInt(100000, 1000000));
+
 const buildAuthPayload = async (user) => {
   const accessToken = generateAccessToken({
     userId: user._id,
@@ -56,13 +58,14 @@ const registerStudent = async (payload) => {
     throw new ApiError(StatusCodes.CONFLICT, "Email is already registered");
   }
 
-  const verificationToken = crypto.randomBytes(24).toString("hex");
+  const verificationOtp = generateOtp();
 
   const user = await User.create({
     ...payload,
     email: payload.email.toLowerCase(),
     role: USER_ROLES.STUDENT,
-    emailVerificationToken: verificationToken
+    emailVerificationOtp: verificationOtp,
+    emailVerificationOtpExpires: new Date(Date.now() + 10 * 60 * 1000)
   });
 
   await StudentProfile.create({
@@ -78,9 +81,7 @@ const registerStudent = async (payload) => {
       subject: "Verify your email address",
       html: emailVerificationTemplate({
         name: user.fullName,
-        verificationLink: `${
-          process.env.FRONTEND_VERIFY_EMAIL_URL || process.env.CLIENT_URL
-        }?token=${verificationToken}`
+        otp: verificationOtp
       })
     });
   } catch (error) {
@@ -103,6 +104,13 @@ const loginUser = async ({ email, password, expectedRole }) => {
 
   if (user.isSuspended) {
     throw new ApiError(StatusCodes.FORBIDDEN, "This account has been suspended");
+  }
+
+  if (user.role === USER_ROLES.STUDENT && !user.isEmailVerified) {
+    throw new ApiError(
+      StatusCodes.FORBIDDEN,
+      "Email not verified. Verify your account with the OTP sent to your email."
+    );
   }
 
   const isValidPassword = await user.comparePassword(password);
@@ -140,9 +148,9 @@ const forgotPassword = async (email) => {
 
   if (!user) return;
 
-  const resetToken = crypto.randomBytes(24).toString("hex");
-  user.passwordResetToken = resetToken;
-  user.passwordResetExpires = new Date(Date.now() + 60 * 60 * 1000);
+  const resetOtp = generateOtp();
+  user.passwordResetOtp = resetOtp;
+  user.passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000);
   await user.save();
 
   try {
@@ -151,7 +159,7 @@ const forgotPassword = async (email) => {
       subject: "Reset your password",
       html: passwordResetTemplate({
         name: user.fullName,
-        resetLink: `${process.env.FRONTEND_RESET_PASSWORD_URL}?token=${resetToken}`
+        otp: resetOtp
       })
     });
   } catch (error) {
@@ -159,36 +167,75 @@ const forgotPassword = async (email) => {
   }
 };
 
-const resetPassword = async ({ token, password }) => {
+const resetPassword = async ({ email, otp, password }) => {
   const user = await User.findOne({
-    passwordResetToken: token,
+    email: email.toLowerCase(),
+    passwordResetOtp: otp,
     passwordResetExpires: { $gt: new Date() }
   }).select("+password");
 
   if (!user) {
-    throw new ApiError(StatusCodes.BAD_REQUEST, "Reset token is invalid or expired");
+    throw new ApiError(StatusCodes.BAD_REQUEST, "Reset OTP is invalid or expired");
   }
 
   user.password = password;
-  user.passwordResetToken = undefined;
+  user.passwordResetOtp = undefined;
   user.passwordResetExpires = undefined;
   await user.save();
 
   return sanitizeUser(user);
 };
 
-const verifyEmail = async (token) => {
-  const user = await User.findOne({ emailVerificationToken: token });
+const verifyEmail = async ({ email, otp }) => {
+  const user = await User.findOne({
+    email: email.toLowerCase(),
+    emailVerificationOtp: otp,
+    emailVerificationOtpExpires: { $gt: new Date() }
+  });
 
   if (!user) {
-    throw new ApiError(StatusCodes.BAD_REQUEST, "Verification token is invalid");
+    throw new ApiError(StatusCodes.BAD_REQUEST, "Verification OTP is invalid or expired");
   }
 
   user.isEmailVerified = true;
-  user.emailVerificationToken = undefined;
+  user.emailVerificationOtp = undefined;
+  user.emailVerificationOtpExpires = undefined;
   await user.save();
 
   return sanitizeUser(user);
+};
+
+const resendVerificationOtp = async (email) => {
+  const user = await User.findOne({
+    email: email.toLowerCase(),
+    isDeleted: false
+  });
+
+  if (!user) {
+    return;
+  }
+
+  if (user.isEmailVerified) {
+    throw new ApiError(StatusCodes.BAD_REQUEST, "Email is already verified");
+  }
+
+  const verificationOtp = generateOtp();
+  user.emailVerificationOtp = verificationOtp;
+  user.emailVerificationOtpExpires = new Date(Date.now() + 10 * 60 * 1000);
+  await user.save();
+
+  try {
+    await sendEmail({
+      to: user.email,
+      subject: "Your email verification OTP",
+      html: emailVerificationTemplate({
+        name: user.fullName,
+        otp: verificationOtp
+      })
+    });
+  } catch (error) {
+    console.error("Resend email verification OTP failed:", error.message);
+  }
 };
 
 const changePassword = async ({ userId, currentPassword, newPassword }) => {
@@ -258,6 +305,7 @@ module.exports = {
   forgotPassword,
   resetPassword,
   verifyEmail,
+  resendVerificationOtp,
   changePassword,
   deactivateAccount,
   deleteOwnAccount,

@@ -1,13 +1,15 @@
-const emailVerificationTemplate = ({ name, verificationLink }) => `
+const emailVerificationTemplate = ({ name, otp }) => `
   <h2>Welcome ${name}</h2>
-  <p>Please verify your email address by clicking the link below.</p>
-  <p><a href="${verificationLink}">Verify Email</a></p>
+  <p>Use the OTP below to verify your email address.</p>
+  <h1>${otp}</h1>
+  <p>This OTP expires in 10 minutes.</p>
 `;
 
-const passwordResetTemplate = ({ name, resetLink }) => `
+const passwordResetTemplate = ({ name, otp }) => `
   <h2>Password Reset</h2>
-  <p>Hello ${name}, click the link below to reset your password.</p>
-  <p><a href="${resetLink}">Reset Password</a></p>
+  <p>Hello ${name}, use the OTP below to reset your password.</p>
+  <h1>${otp}</h1>
+  <p>This OTP expires in 10 minutes.</p>
 `;
 
 module.exports = {

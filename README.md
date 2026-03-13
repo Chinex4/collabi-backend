@@ -16,7 +16,7 @@ A production-style Node.js backend for a final year project that helps students 
 
 ## Main Features
 
-- Student and admin authentication
+- Student and admin authentication with OTP email verification and OTP password reset
 - Rich student profiles with skills, interests, links, and visibility controls
 - Project creation, discovery, bookmarking, and team management
 - Applications and invitations for project collaboration
@@ -95,6 +95,10 @@ After starting the server, open:
 
 - `POST /api/auth/register`
 - `POST /api/auth/login`
+- `POST /api/auth/verify-email`
+- `POST /api/auth/resend-verification-otp`
+- `POST /api/auth/forgot-password`
+- `POST /api/auth/reset-password`
 - `GET /api/auth/me`
 - `GET /api/profiles/me`
 - `GET /api/projects`
@@ -137,6 +141,7 @@ Implemented events include:
 ## Frontend Integration Notes
 
 - Access tokens are returned in JSON and refresh tokens are set as HTTP-only cookies.
+- Email verification and forgot-password flows use 6-digit OTP codes sent by email, not frontend verification links.
 - Pagination metadata follows `page`, `limit`, `total`, `pages`.
 - All successful responses follow a consistent JSON envelope.
 - Cloudinary uploads are abstracted through `/api/files/upload`.

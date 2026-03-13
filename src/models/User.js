@@ -48,8 +48,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       select: false
     },
-    emailVerificationToken: String,
-    passwordResetToken: String,
+    emailVerificationOtp: String,
+    emailVerificationOtpExpires: Date,
+    passwordResetOtp: String,
     passwordResetExpires: Date,
     isEmailVerified: {
       type: Boolean,
@@ -82,7 +83,6 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.index({ email: 1 });
 userSchema.index({ role: 1, createdAt: -1 });
 
 userSchema.pre("save", async function hashPassword(next) {

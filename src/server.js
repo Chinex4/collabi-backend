@@ -16,6 +16,15 @@ const startServer = async () => {
   const io = setupSocket(server);
   app.set("io", io);
 
+  server.on("error", (error) => {
+    if (error.code === "EADDRINUSE") {
+      console.error(`Port ${PORT} is already in use. Update PORT in your .env file and try again.`);
+      process.exit(1);
+    }
+
+    throw error;
+  });
+
   server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
