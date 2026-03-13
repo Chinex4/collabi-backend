@@ -89,7 +89,11 @@ These are also created by the seeder and can be changed in [src/seeders/seed.js]
 
 After starting the server, open:
 
-`http://localhost:5000/api/docs`
+`http://localhost:5001/api/docs`
+
+Raw OpenAPI JSON:
+
+`http://localhost:5001/api/docs.json`
 
 ## Core API Areas
 
