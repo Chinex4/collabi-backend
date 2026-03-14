@@ -8,7 +8,10 @@
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
     "seed": "node src/seeders/seed.js",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "docs:postman": "node src/docs/generatePostmanCollection.js",
+    "test": "node --test --test-concurrency=1",
+    "test:chat": "node --test --test-concurrency=1 test/chat.http.test.js test/chat.socket.test.js"
   },
   "keywords": [
     "nodejs",
@@ -44,7 +47,10 @@
   "devDependencies": {
     "eslint": "^9.20.1",
     "eslint-config-prettier": "^10.0.1",
+    "mongodb-memory-server": "^11.0.1",
     "nodemon": "^3.1.9",
-    "prettier": "^3.5.1"
+    "prettier": "^3.5.1",
+    "socket.io-client": "^4.8.3",
+    "supertest": "^7.2.2"
   }
 }

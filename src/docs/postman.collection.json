@@ -1,129 +1,5287 @@
 {
   "info": {
-    "name": "Student Project Collaboration Platform",
+    "name": "Student Project Collaboration Platform API",
     "_postman_id": "ca332f55-bfce-48c1-b2b6-99afbe19d6fa",
-    "description": "Postman collection for the Student Project Collaboration Platform backend",
+    "description": "Comprehensive Postman collection generated from the local OpenAPI source in `src/docs/swaggerSpec.js`.\n\nIt covers the complete REST API, includes reusable collection variables, and captures common IDs/tokens from create and login flows.\n\nREST base URL: `{{baseUrl}}`\n\nSocket.IO notes are included in the `Socket.IO Reference` folder.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Auth - Register",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"fullName\": \"Ada Lovelace\",\n  \"email\": \"ada@example.com\",\n  \"password\": \"Password@123\",\n  \"department\": \"Computer Science\",\n  \"level\": 400\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/auth/register",
-          "host": ["{{baseUrl}}"],
-          "path": ["auth", "register"]
+      "name": "Health",
+      "description": {
+        "type": "text/markdown",
+        "content": "Service health checks"
+      },
+      "item": [
+        {
+          "name": "Service health check",
+          "request": {
+            "method": "GET",
+            "description": "Service health check\n\nMethod: `GET`\nPath: `/health`\nAuth: None",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ],
+              "query": []
+            }
+          },
+          "response": []
         }
-      }
+      ]
     },
     {
-      "name": "Auth - Login",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"email\": \"admin@studentcollab.com\",\n  \"password\": \"Admin@12345\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/auth/login",
-          "host": ["{{baseUrl}}"],
-          "path": ["auth", "login"]
-        }
-      }
-    },
-    {
-      "name": "Projects - List",
-      "request": {
-        "method": "GET",
-        "url": {
-          "raw": "{{baseUrl}}/projects?page=1&limit=10",
-          "host": ["{{baseUrl}}"],
-          "path": ["projects"],
-          "query": [
+      "name": "Auth",
+      "description": {
+        "type": "text/markdown",
+        "content": "Authentication and account lifecycle"
+      },
+      "item": [
+        {
+          "name": "Register a new student account",
+          "event": [
             {
-              "key": "page",
-              "value": "1"
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json?.data?.accessToken) pm.collectionVariables.set(\"token\", json.data.accessToken);",
+                  "if (json?.data?.refreshToken) pm.collectionVariables.set(\"refreshToken\", json.data.refreshToken);",
+                  "if (json?.data?.user?._id) pm.collectionVariables.set(\"userId\", json.data.user._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "description": "Register a new student account\n\nMethod: `POST`\nPath: `/api/auth/register`\nAuth: None\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Ada Lovelace\",\n  \"email\": \"ada@studentcollab.com\",\n  \"password\": \"Password@123\",\n  \"faculty\": \"{{facultyId}}\",\n  \"department\": \"{{departmentId}}\",\n  \"level\": 400\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login as a student or admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json?.data?.accessToken) pm.collectionVariables.set(\"token\", json.data.accessToken);",
+                  "if (json?.data?.refreshToken) pm.collectionVariables.set(\"refreshToken\", json.data.refreshToken);",
+                  "if (json?.data?.user?._id) pm.collectionVariables.set(\"userId\", json.data.user._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "description": "Login as a student or admin\n\nMethod: `POST`\nPath: `/api/auth/login`\nAuth: None\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"Password@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login as admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json?.data?.accessToken) pm.collectionVariables.set(\"adminToken\", json.data.accessToken);",
+                  "if (json?.data?.refreshToken) pm.collectionVariables.set(\"adminRefreshToken\", json.data.refreshToken);",
+                  "if (json?.data?.user?._id) pm.collectionVariables.set(\"userId\", json.data.user._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "description": "Login as admin\n\nMethod: `POST`\nPath: `/api/auth/admin/login`\nAuth: None\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"Password@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/admin/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "admin",
+                "login"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh access token",
+          "request": {
+            "method": "POST",
+            "description": "Refresh access token\n\nMethod: `POST`\nPath: `/api/auth/refresh`\nAuth: None\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/refresh",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "refresh"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send OTP for password reset",
+          "request": {
+            "method": "POST",
+            "description": "Send OTP for password reset\n\nMethod: `POST`\nPath: `/api/auth/forgot-password`\nAuth: None\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/forgot-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "forgot-password"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset password with email and OTP",
+          "request": {
+            "method": "POST",
+            "description": "Reset password with email and OTP\n\nMethod: `POST`\nPath: `/api/auth/reset-password`\nAuth: None\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"otp\": \"123456\",\n  \"password\": \"NewPassword@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/reset-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "reset-password"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify student email with OTP",
+          "request": {
+            "method": "POST",
+            "description": "Verify student email with OTP\n\nMethod: `POST`\nPath: `/api/auth/verify-email`\nAuth: None\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"otp\": \"123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/verify-email",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "verify-email"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Resend verification OTP",
+          "request": {
+            "method": "POST",
+            "description": "Resend verification OTP\n\nMethod: `POST`\nPath: `/api/auth/resend-verification-otp`\nAuth: None\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/resend-verification-otp",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "resend-verification-otp"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout current user",
+          "request": {
+            "method": "POST",
+            "description": "Logout current user\n\nMethod: `POST`\nPath: `/api/auth/logout`\nAuth: Bearer `{{token}}`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change current password",
+          "request": {
+            "method": "POST",
+            "description": "Change current password\n\nMethod: `POST`\nPath: `/api/auth/change-password`\nAuth: Bearer `{{token}}`\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"Password@123\",\n  \"newPassword\": \"Password@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/change-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "change-password"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get current authenticated user",
+          "request": {
+            "method": "GET",
+            "description": "Get current authenticated user\n\nMethod: `GET`\nPath: `/api/auth/me`\nAuth: Bearer `{{token}}`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deactivate own account",
+          "request": {
+            "method": "PATCH",
+            "description": "Deactivate own account\n\nMethod: `PATCH`\nPath: `/api/auth/deactivate`\nAuth: Bearer `{{token}}`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/deactivate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "deactivate"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Soft-delete own account",
+          "request": {
+            "method": "DELETE",
+            "description": "Soft-delete own account\n\nMethod: `DELETE`\nPath: `/api/auth/delete-account`\nAuth: Bearer `{{token}}`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/delete-account",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "delete-account"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "description": {
+        "type": "text/markdown",
+        "content": "Search users"
+      },
+      "item": [
+        {
+          "name": "Search users",
+          "request": {
+            "method": "GET",
+            "description": "Search users\n\nMethod: `GET`\nPath: `/api/users`\nAuth: Bearer `{{token}}`\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`\n- `search`, sample: `sample`\n- `role`, sample: `student`\n- `department`, sample: `{{departmentId}}`\n- `isActive`, sample: `true`\n- `sortBy`, sample: `-createdAt`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "sample",
+                  "description": ""
+                },
+                {
+                  "key": "role",
+                  "value": "student",
+                  "description": ""
+                },
+                {
+                  "key": "department",
+                  "value": "{{departmentId}}",
+                  "description": ""
+                },
+                {
+                  "key": "isActive",
+                  "value": "true",
+                  "description": ""
+                },
+                {
+                  "key": "sortBy",
+                  "value": "-createdAt",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Profiles",
+      "description": {
+        "type": "text/markdown",
+        "content": "Student profiles"
+      },
+      "item": [
+        {
+          "name": "Search student profiles",
+          "request": {
+            "method": "GET",
+            "description": "Search student profiles\n\nMethod: `GET`\nPath: `/api/profiles`\nAuth: None\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`\n- `search`, sample: `sample`\n- `department`, sample: `{{departmentId}}`\n- `faculty`, sample: `{{facultyId}}`\n- `skill`, sample: `{{skillId}}`\n- `interest`, sample: `{{interestId}}`\n- `availability`, sample: `available`",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/profiles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "profiles"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "sample",
+                  "description": ""
+                },
+                {
+                  "key": "department",
+                  "value": "{{departmentId}}",
+                  "description": ""
+                },
+                {
+                  "key": "faculty",
+                  "value": "{{facultyId}}",
+                  "description": ""
+                },
+                {
+                  "key": "skill",
+                  "value": "{{skillId}}",
+                  "description": ""
+                },
+                {
+                  "key": "interest",
+                  "value": "{{interestId}}",
+                  "description": ""
+                },
+                {
+                  "key": "availability",
+                  "value": "available",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get my profile",
+          "request": {
+            "method": "GET",
+            "description": "Get my profile\n\nMethod: `GET`\nPath: `/api/profiles/me`\nAuth: Bearer `{{token}}`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/profiles/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "profiles",
+                "me"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update my profile",
+          "request": {
+            "method": "PATCH",
+            "description": "Update my profile\n\nMethod: `PATCH`\nPath: `/api/profiles/me`\nAuth: Bearer `{{token}}`\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Ada Lovelace\",\n  \"faculty\": \"{{facultyId}}\",\n  \"department\": \"{{departmentId}}\",\n  \"level\": 1,\n  \"bio\": \"bio sample\",\n  \"skills\": [\n    {\n      \"skill\": \"{{skillId}}\",\n      \"level\": \"beginner\"\n    }\n  ],\n  \"interests\": [\n    \"{{interestId}}\"\n  ],\n  \"availability\": \"available\",\n  \"academicInfo\": {},\n  \"portfolioLinks\": {},\n  \"projectPreferences\": {},\n  \"preferredRoles\": [\n    \"sample\"\n  ],\n  \"pastProjectExperience\": [\n    {}\n  ],\n  \"visibility\": \"public\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/profiles/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "profiles",
+                "me"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get a public profile by id",
+          "request": {
+            "method": "GET",
+            "description": "Get a public profile by id\n\nMethod: `GET`\nPath: `/api/profiles/{id}`\nAuth: None\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/profiles/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "profiles",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Skills",
+      "description": {
+        "type": "text/markdown",
+        "content": "Skill lookup management"
+      },
+      "item": [
+        {
+          "name": "List skills",
+          "request": {
+            "method": "GET",
+            "description": "List skills\n\nMethod: `GET`\nPath: `/api/skills`\nAuth: None\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`\n- `search`, sample: `sample`",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/skills",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "skills"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "sample",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create skill",
+          "request": {
+            "method": "POST",
+            "description": "Create skill\n\nMethod: `POST`\nPath: `/api/skills`\nAuth: Bearer `{{token}}`\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Skill name\",\n  \"description\": \"Description for skills\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/skills",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "skills"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get skill by id",
+          "request": {
+            "method": "GET",
+            "description": "Get skill by id\n\nMethod: `GET`\nPath: `/api/skills/{id}`\nAuth: None\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/skills/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "skills",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update skill",
+          "request": {
+            "method": "PATCH",
+            "description": "Update skill\n\nMethod: `PATCH`\nPath: `/api/skills/{id}`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"sample\",\n  \"description\": \"description sample\",\n  \"isActive\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/skills/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "skills",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete skill",
+          "request": {
+            "method": "DELETE",
+            "description": "Delete skill\n\nMethod: `DELETE`\nPath: `/api/skills/{id}`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/skills/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "skills",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Interests",
+      "description": {
+        "type": "text/markdown",
+        "content": "Interest lookup management"
+      },
+      "item": [
+        {
+          "name": "List interests",
+          "request": {
+            "method": "GET",
+            "description": "List interests\n\nMethod: `GET`\nPath: `/api/interests`\nAuth: None\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`\n- `search`, sample: `sample`",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/interests",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "interests"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "sample",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create interest",
+          "request": {
+            "method": "POST",
+            "description": "Create interest\n\nMethod: `POST`\nPath: `/api/interests`\nAuth: Bearer `{{token}}`\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Interest name\",\n  \"description\": \"Description for interests\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/interests",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "interests"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get interest by id",
+          "request": {
+            "method": "GET",
+            "description": "Get interest by id\n\nMethod: `GET`\nPath: `/api/interests/{id}`\nAuth: None\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/interests/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "interests",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update interest",
+          "request": {
+            "method": "PATCH",
+            "description": "Update interest\n\nMethod: `PATCH`\nPath: `/api/interests/{id}`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"sample\",\n  \"description\": \"description sample\",\n  \"isActive\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/interests/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "interests",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete interest",
+          "request": {
+            "method": "DELETE",
+            "description": "Delete interest\n\nMethod: `DELETE`\nPath: `/api/interests/{id}`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/interests/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "interests",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "description": {
+        "type": "text/markdown",
+        "content": "Project category management"
+      },
+      "item": [
+        {
+          "name": "List categories",
+          "request": {
+            "method": "GET",
+            "description": "List categories\n\nMethod: `GET`\nPath: `/api/categories`\nAuth: None\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`\n- `search`, sample: `sample`",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/categories",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "categories"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "sample",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create categorie",
+          "request": {
+            "method": "POST",
+            "description": "Create categorie\n\nMethod: `POST`\nPath: `/api/categories`\nAuth: Bearer `{{token}}`\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Categorie name\",\n  \"description\": \"Description for categories\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/categories",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "categories"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get categorie by id",
+          "request": {
+            "method": "GET",
+            "description": "Get categorie by id\n\nMethod: `GET`\nPath: `/api/categories/{id}`\nAuth: None\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "categories",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update categorie",
+          "request": {
+            "method": "PATCH",
+            "description": "Update categorie\n\nMethod: `PATCH`\nPath: `/api/categories/{id}`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"sample\",\n  \"description\": \"description sample\",\n  \"isActive\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "categories",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete categorie",
+          "request": {
+            "method": "DELETE",
+            "description": "Delete categorie\n\nMethod: `DELETE`\nPath: `/api/categories/{id}`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "categories",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Departments",
+      "description": {
+        "type": "text/markdown",
+        "content": "Department lookup management"
+      },
+      "item": [
+        {
+          "name": "List departments",
+          "request": {
+            "method": "GET",
+            "description": "List departments\n\nMethod: `GET`\nPath: `/api/departments`\nAuth: None\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`\n- `search`, sample: `sample`",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/departments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "departments"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "sample",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create department",
+          "request": {
+            "method": "POST",
+            "description": "Create department\n\nMethod: `POST`\nPath: `/api/departments`\nAuth: Bearer `{{token}}`\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Department name\",\n  \"description\": \"Description for departments\",\n  \"faculty\": \"{{facultyId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/departments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "departments"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get department by id",
+          "request": {
+            "method": "GET",
+            "description": "Get department by id\n\nMethod: `GET`\nPath: `/api/departments/{id}`\nAuth: None\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/departments/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "departments",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update department",
+          "request": {
+            "method": "PATCH",
+            "description": "Update department\n\nMethod: `PATCH`\nPath: `/api/departments/{id}`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"sample\",\n  \"description\": \"description sample\",\n  \"isActive\": true,\n  \"faculty\": \"{{facultyId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/departments/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "departments",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete department",
+          "request": {
+            "method": "DELETE",
+            "description": "Delete department\n\nMethod: `DELETE`\nPath: `/api/departments/{id}`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/departments/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "departments",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Faculties",
+      "description": {
+        "type": "text/markdown",
+        "content": "Faculty lookup management"
+      },
+      "item": [
+        {
+          "name": "List faculties",
+          "request": {
+            "method": "GET",
+            "description": "List faculties\n\nMethod: `GET`\nPath: `/api/faculties`\nAuth: None\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`\n- `search`, sample: `sample`",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/faculties",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "faculties"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "sample",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create facultie",
+          "request": {
+            "method": "POST",
+            "description": "Create facultie\n\nMethod: `POST`\nPath: `/api/faculties`\nAuth: Bearer `{{token}}`\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Facultie name\",\n  \"description\": \"Description for faculties\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/faculties",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "faculties"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get facultie by id",
+          "request": {
+            "method": "GET",
+            "description": "Get facultie by id\n\nMethod: `GET`\nPath: `/api/faculties/{id}`\nAuth: None\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/faculties/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "faculties",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update facultie",
+          "request": {
+            "method": "PATCH",
+            "description": "Update facultie\n\nMethod: `PATCH`\nPath: `/api/faculties/{id}`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"sample\",\n  \"description\": \"description sample\",\n  \"isActive\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/faculties/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "faculties",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete facultie",
+          "request": {
+            "method": "DELETE",
+            "description": "Delete facultie\n\nMethod: `DELETE`\nPath: `/api/faculties/{id}`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/faculties/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "faculties",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "description": {
+        "type": "text/markdown",
+        "content": "Project discovery and management"
+      },
+      "item": [
+        {
+          "name": "List and discover projects",
+          "request": {
+            "method": "GET",
+            "description": "List and discover projects\n\nMethod: `GET`\nPath: `/api/projects`\nAuth: None\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`\n- `search`, sample: `sample`\n- `category`, sample: `{{categoryId}}`\n- `department`, sample: `{{departmentId}}`\n- `requiredSkill`, sample: `{{requiredSkillId}}`\n- `status`, sample: `open`\n- `visibility`, sample: `public`\n- `recruitmentOpen`, sample: `true`\n- `dateFrom`, sample: `sample`\n- `dateTo`, sample: `sample`\n- `sort`, sample: `recent`\n- `sortBy`, sample: `-createdAt`",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "sample",
+                  "description": ""
+                },
+                {
+                  "key": "category",
+                  "value": "{{categoryId}}",
+                  "description": ""
+                },
+                {
+                  "key": "department",
+                  "value": "{{departmentId}}",
+                  "description": ""
+                },
+                {
+                  "key": "requiredSkill",
+                  "value": "{{requiredSkillId}}",
+                  "description": ""
+                },
+                {
+                  "key": "status",
+                  "value": "open",
+                  "description": ""
+                },
+                {
+                  "key": "visibility",
+                  "value": "public",
+                  "description": ""
+                },
+                {
+                  "key": "recruitmentOpen",
+                  "value": "true",
+                  "description": ""
+                },
+                {
+                  "key": "dateFrom",
+                  "value": "sample",
+                  "description": ""
+                },
+                {
+                  "key": "dateTo",
+                  "value": "sample",
+                  "description": ""
+                },
+                {
+                  "key": "sort",
+                  "value": "recent",
+                  "description": ""
+                },
+                {
+                  "key": "sortBy",
+                  "value": "-createdAt",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create a project",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json?.data?._id) pm.collectionVariables.set(\"projectId\", json?.data?._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "description": "Create a project\n\nMethod: `POST`\nPath: `/api/projects`\nAuth: Bearer `{{token}}`\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Sample title\",\n  \"description\": \"description sample\",\n  \"category\": \"{{categoryId}}\",\n  \"department\": \"{{departmentId}}\",\n  \"faculty\": \"{{facultyId}}\",\n  \"requiredSkills\": [\n    \"{{skillId}}\"\n  ],\n  \"optionalSkills\": [\n    \"{{skillId}}\"\n  ],\n  \"maxTeamSize\": 1,\n  \"deadline\": \"2026-03-14T12:30:00.000Z\",\n  \"visibility\": \"public\",\n  \"tags\": [\n    \"sample\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List projects created by current user",
+          "request": {
+            "method": "GET",
+            "description": "List projects created by current user\n\nMethod: `GET`\nPath: `/api/projects/mine`\nAuth: Bearer `{{token}}`\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/mine",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "mine"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get bookmarked projects",
+          "request": {
+            "method": "GET",
+            "description": "Get bookmarked projects\n\nMethod: `GET`\nPath: `/api/projects/saved`\nAuth: Bearer `{{token}}`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/saved",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "saved"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get a single project",
+          "request": {
+            "method": "GET",
+            "description": "Get a single project\n\nMethod: `GET`\nPath: `/api/projects/{id}`\nAuth: None\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update a project",
+          "request": {
+            "method": "PATCH",
+            "description": "Update a project\n\nMethod: `PATCH`\nPath: `/api/projects/{id}`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Sample title\",\n  \"description\": \"description sample\",\n  \"category\": \"{{categoryId}}\",\n  \"department\": \"{{departmentId}}\",\n  \"faculty\": \"{{facultyId}}\",\n  \"requiredSkills\": [\n    \"{{skillId}}\"\n  ],\n  \"optionalSkills\": [\n    \"{{skillId}}\"\n  ],\n  \"maxTeamSize\": 1,\n  \"deadline\": \"2026-03-14T12:30:00.000Z\",\n  \"status\": \"open\",\n  \"visibility\": \"public\",\n  \"tags\": [\n    \"sample\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete a project",
+          "request": {
+            "method": "DELETE",
+            "description": "Delete a project\n\nMethod: `DELETE`\nPath: `/api/projects/{id}`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change project status",
+          "request": {
+            "method": "PATCH",
+            "description": "Change project status\n\nMethod: `PATCH`\nPath: `/api/projects/{id}/status`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"open\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/{{id}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "{{id}}",
+                "status"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Bookmark a project",
+          "request": {
+            "method": "POST",
+            "description": "Bookmark a project\n\nMethod: `POST`\nPath: `/api/projects/{id}/bookmark`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/{{id}}/bookmark",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "{{id}}",
+                "bookmark"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove a project from bookmarks",
+          "request": {
+            "method": "DELETE",
+            "description": "Remove a project from bookmarks\n\nMethod: `DELETE`\nPath: `/api/projects/{id}/bookmark`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/{{id}}/bookmark",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "{{id}}",
+                "bookmark"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "View project team members",
+          "request": {
+            "method": "GET",
+            "description": "View project team members\n\nMethod: `GET`\nPath: `/api/projects/{id}/team`\nAuth: None\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/{{id}}/team",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "{{id}}",
+                "team"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Applications",
+      "description": {
+        "type": "text/markdown",
+        "content": "Project applications"
+      },
+      "item": [
+        {
+          "name": "List my project applications",
+          "request": {
+            "method": "GET",
+            "description": "List my project applications\n\nMethod: `GET`\nPath: `/api/projects/applications/me`\nAuth: Bearer `{{token}}`\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/applications/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "applications",
+                "me"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Apply to join a project",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json?.data?._id) pm.collectionVariables.set(\"applicationId\", json?.data?._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "description": "Apply to join a project\n\nMethod: `POST`\nPath: `/api/projects/{id}/applications`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"I can contribute to the API and database layer.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/{{id}}/applications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "{{id}}",
+                "applications"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List applications for a project owner",
+          "request": {
+            "method": "GET",
+            "description": "List applications for a project owner\n\nMethod: `GET`\nPath: `/api/projects/{id}/applications`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`\n- `status`, sample: `pending`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/{{id}}/applications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "{{id}}",
+                "applications"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "status",
+                  "value": "pending",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Accept a project application",
+          "request": {
+            "method": "PATCH",
+            "description": "Accept a project application\n\nMethod: `PATCH`\nPath: `/api/projects/{id}/applications/{applicationId}/accept`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)\n- `applicationId` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"roleName\": \"backend developer\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/{{id}}/applications/{{applicationId}}/accept",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "{{id}}",
+                "applications",
+                "{{applicationId}}",
+                "accept"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reject a project application",
+          "request": {
+            "method": "PATCH",
+            "description": "Reject a project application\n\nMethod: `PATCH`\nPath: `/api/projects/{id}/applications/{applicationId}/reject`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)\n- `applicationId` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reviewNote\": \"We need a different skill set right now.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/{{id}}/applications/{{applicationId}}/reject",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "{{id}}",
+                "applications",
+                "{{applicationId}}",
+                "reject"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Withdraw my project application",
+          "request": {
+            "method": "DELETE",
+            "description": "Withdraw my project application\n\nMethod: `DELETE`\nPath: `/api/projects/{id}/applications/{applicationId}/withdraw`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)\n- `applicationId` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/{{id}}/applications/{{applicationId}}/withdraw",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "{{id}}",
+                "applications",
+                "{{applicationId}}",
+                "withdraw"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Invitations",
+      "description": {
+        "type": "text/markdown",
+        "content": "Project invitations"
+      },
+      "item": [
+        {
+          "name": "List invitations received by current user",
+          "request": {
+            "method": "GET",
+            "description": "List invitations received by current user\n\nMethod: `GET`\nPath: `/api/projects/invitations/received`\nAuth: Bearer `{{token}}`\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`\n- `status`, sample: `pending`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/invitations/received",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "invitations",
+                "received"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "status",
+                  "value": "pending",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Accept a project invitation",
+          "request": {
+            "method": "PATCH",
+            "description": "Accept a project invitation\n\nMethod: `PATCH`\nPath: `/api/projects/invitations/{invitationId}/accept`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `invitationId` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/invitations/{{invitationId}}/accept",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "invitations",
+                "{{invitationId}}",
+                "accept"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Decline a project invitation",
+          "request": {
+            "method": "PATCH",
+            "description": "Decline a project invitation\n\nMethod: `PATCH`\nPath: `/api/projects/invitations/{invitationId}/decline`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `invitationId` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/invitations/{{invitationId}}/decline",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "invitations",
+                "{{invitationId}}",
+                "decline"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Invite a student to a project",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json?.data?._id) pm.collectionVariables.set(\"invitationId\", json?.data?._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "description": "Invite a student to a project\n\nMethod: `POST`\nPath: `/api/projects/{id}/invitations`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"invitedUser\": \"{{invitedUser}}\",\n  \"message\": \"message sample\",\n  \"proposedRole\": \"frontend developer\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/{{id}}/invitations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "{{id}}",
+                "invitations"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List sent invitations for a project",
+          "request": {
+            "method": "GET",
+            "description": "List sent invitations for a project\n\nMethod: `GET`\nPath: `/api/projects/{id}/invitations`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/{{id}}/invitations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "{{id}}",
+                "invitations"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel a pending invitation",
+          "request": {
+            "method": "DELETE",
+            "description": "Cancel a pending invitation\n\nMethod: `DELETE`\nPath: `/api/projects/{id}/invitations/{invitationId}/cancel`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)\n- `invitationId` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/{{id}}/invitations/{{invitationId}}/cancel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "{{id}}",
+                "invitations",
+                "{{invitationId}}",
+                "cancel"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Members",
+      "description": {
+        "type": "text/markdown",
+        "content": "Project membership management"
+      },
+      "item": [
+        {
+          "name": "List project members",
+          "request": {
+            "method": "GET",
+            "description": "List project members\n\nMethod: `GET`\nPath: `/api/projects/{id}/members`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/{{id}}/members",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "{{id}}",
+                "members"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Assign a role to a project member",
+          "request": {
+            "method": "PATCH",
+            "description": "Assign a role to a project member\n\nMethod: `PATCH`\nPath: `/api/projects/{id}/members/assign-role`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"memberUserId\": \"{{memberUserId}}\",\n  \"roleName\": \"backend developer\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/{{id}}/members/assign-role",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "{{id}}",
+                "members",
+                "assign-role"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove a member from a project",
+          "request": {
+            "method": "DELETE",
+            "description": "Remove a member from a project\n\nMethod: `DELETE`\nPath: `/api/projects/{id}/members/remove`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"memberUserId\": \"{{memberUserId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/{{id}}/members/remove",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "{{id}}",
+                "members",
+                "remove"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Leave a project team",
+          "request": {
+            "method": "DELETE",
+            "description": "Leave a project team\n\nMethod: `DELETE`\nPath: `/api/projects/{id}/members/leave`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/{{id}}/members/leave",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "{{id}}",
+                "members",
+                "leave"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tasks",
+      "description": {
+        "type": "text/markdown",
+        "content": "Task and task comment management"
+      },
+      "item": [
+        {
+          "name": "Create a task",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json?.data?._id) pm.collectionVariables.set(\"taskId\", json?.data?._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "description": "Create a task\n\nMethod: `POST`\nPath: `/api/tasks`\nAuth: Bearer `{{token}}`\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Sample title\",\n  \"project\": \"{{projectId}}\",\n  \"description\": \"description sample\",\n  \"assignedTo\": [\n    \"{{userId}}\"\n  ],\n  \"priority\": \"low\",\n  \"status\": \"todo\",\n  \"dueDate\": \"2026-03-14T12:30:00.000Z\",\n  \"attachments\": [\n    \"{{fileId}}\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List tasks assigned to current user",
+          "request": {
+            "method": "GET",
+            "description": "List tasks assigned to current user\n\nMethod: `GET`\nPath: `/api/tasks/my-assigned`\nAuth: Bearer `{{token}}`\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`\n- `status`, sample: `todo`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/my-assigned",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks",
+                "my-assigned"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "status",
+                  "value": "todo",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List tasks for a project",
+          "request": {
+            "method": "GET",
+            "description": "List tasks for a project\n\nMethod: `GET`\nPath: `/api/tasks/project/{projectId}`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `projectId` (required)\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`\n- `status`, sample: `todo`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/project/{{projectId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks",
+                "project",
+                "{{projectId}}"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "status",
+                  "value": "todo",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update a task",
+          "request": {
+            "method": "PATCH",
+            "description": "Update a task\n\nMethod: `PATCH`\nPath: `/api/tasks/{id}`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Sample title\",\n  \"description\": \"description sample\",\n  \"assignedTo\": [\n    \"{{userId}}\"\n  ],\n  \"priority\": \"low\",\n  \"status\": \"todo\",\n  \"progress\": 0,\n  \"dueDate\": \"2026-03-14T12:30:00.000Z\",\n  \"attachments\": [\n    \"{{fileId}}\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete a task",
+          "request": {
+            "method": "DELETE",
+            "description": "Delete a task\n\nMethod: `DELETE`\nPath: `/api/tasks/{id}`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add a comment to a task",
+          "request": {
+            "method": "POST",
+            "description": "Add a comment to a task\n\nMethod: `POST`\nPath: `/api/tasks/{id}/comments`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"I have started working on this task.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/{{id}}/comments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks",
+                "{{id}}",
+                "comments"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Edit a task comment",
+          "request": {
+            "method": "PATCH",
+            "description": "Edit a task comment\n\nMethod: `PATCH`\nPath: `/api/tasks/comments/{commentId}`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `commentId` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Hello team\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/comments/{{commentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks",
+                "comments",
+                "{{commentId}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete a task comment",
+          "request": {
+            "method": "DELETE",
+            "description": "Delete a task comment\n\nMethod: `DELETE`\nPath: `/api/tasks/comments/{commentId}`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `commentId` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/comments/{{commentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks",
+                "comments",
+                "{{commentId}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Chat",
+      "description": {
+        "type": "text/markdown",
+        "content": "Private and project chat endpoints"
+      },
+      "item": [
+        {
+          "name": "List my conversations",
+          "request": {
+            "method": "GET",
+            "description": "List my conversations\n\nMethod: `GET`\nPath: `/api/chat/conversations`\nAuth: Bearer `{{token}}`\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/chat/conversations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "chat",
+                "conversations"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create or fetch a private conversation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json?.data?._id) pm.collectionVariables.set(\"conversationId\", json?.data?._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "description": "Create or fetch a private conversation\n\nMethod: `POST`\nPath: `/api/chat/conversations/private`\nAuth: Bearer `{{token}}`\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"participantId\": \"{{participantId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/chat/conversations/private",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "chat",
+                "conversations",
+                "private"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get messages from a private conversation",
+          "request": {
+            "method": "GET",
+            "description": "Get messages from a private conversation\n\nMethod: `GET`\nPath: `/api/chat/conversations/{conversationId}/messages`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `conversationId` (required)\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`\n- `search`, sample: `sample`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/chat/conversations/{{conversationId}}/messages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "chat",
+                "conversations",
+                "{{conversationId}}",
+                "messages"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "sample",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get project chat messages",
+          "request": {
+            "method": "GET",
+            "description": "Get project chat messages\n\nMethod: `GET`\nPath: `/api/chat/projects/{projectId}/messages`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `projectId` (required)\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/chat/projects/{{projectId}}/messages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "chat",
+                "projects",
+                "{{projectId}}",
+                "messages"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send a private message",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json?.data?.conversation?._id) pm.collectionVariables.set(\"conversationId\", json?.data?.conversation?._id);"
+                ]
+              }
             },
             {
-              "key": "limit",
-              "value": "10"
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json?.data?.message?._id) pm.collectionVariables.set(\"messageId\", json?.data?.message?._id);"
+                ]
+              }
             }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Projects - Create",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
+          ],
+          "request": {
+            "method": "POST",
+            "description": "Send a private message\n\nMethod: `POST`\nPath: `/api/chat/messages/private`\nAuth: Bearer `{{token}}`\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"recipientId\": \"{{recipientId}}\",\n  \"content\": \"Hello, can we work together on the API?\",\n  \"attachments\": [\n    \"{{fileId}}\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/chat/messages/private",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "chat",
+                "messages",
+                "private"
+              ],
+              "query": []
+            }
           },
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"title\": \"AI-Based Attendance System\",\n  \"description\": \"Build a face recognition attendance system for university classrooms.\",\n  \"category\": \"{{categoryId}}\",\n  \"maxTeamSize\": 4,\n  \"deadline\": \"2026-07-01T00:00:00.000Z\"\n}"
+          "response": []
         },
-        "url": {
-          "raw": "{{baseUrl}}/projects",
-          "host": ["{{baseUrl}}"],
-          "path": ["projects"]
+        {
+          "name": "Send a message to project chat",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json?.data?.conversation?._id) pm.collectionVariables.set(\"conversationId\", json?.data?.conversation?._id);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json?.data?.message?._id) pm.collectionVariables.set(\"messageId\", json?.data?.message?._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "description": "Send a message to project chat\n\nMethod: `POST`\nPath: `/api/chat/messages/project`\nAuth: Bearer `{{token}}`\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"projectId\": \"{{projectId}}\",\n  \"content\": \"Hello team\",\n  \"attachments\": [\n    \"{{fileId}}\"\n  ],\n  \"mentions\": [\n    \"{{userId}}\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/chat/messages/project",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "chat",
+                "messages",
+                "project"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mark messages as read",
+          "request": {
+            "method": "PATCH",
+            "description": "Mark messages as read\n\nMethod: `PATCH`\nPath: `/api/chat/conversations/{conversationId}/read`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `conversationId` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"messageIds\": [\n    \"{{messageId}}\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/chat/conversations/{{conversationId}}/read",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "chat",
+                "conversations",
+                "{{conversationId}}",
+                "read"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Edit a message",
+          "request": {
+            "method": "PATCH",
+            "description": "Edit a message\n\nMethod: `PATCH`\nPath: `/api/chat/messages/{messageId}`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `messageId` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Hello team\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/chat/messages/{{messageId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "chat",
+                "messages",
+                "{{messageId}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete a message",
+          "request": {
+            "method": "DELETE",
+            "description": "Delete a message\n\nMethod: `DELETE`\nPath: `/api/chat/messages/{messageId}`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `messageId` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/chat/messages/{{messageId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "chat",
+                "messages",
+                "{{messageId}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
         }
-      }
+      ]
     },
     {
-      "name": "Notifications - Mine",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
-          }
-        ],
-        "url": {
-          "raw": "{{baseUrl}}/notifications",
-          "host": ["{{baseUrl}}"],
-          "path": ["notifications"]
+      "name": "Notifications",
+      "description": {
+        "type": "text/markdown",
+        "content": "In-app notifications"
+      },
+      "item": [
+        {
+          "name": "List my notifications",
+          "request": {
+            "method": "GET",
+            "description": "List my notifications\n\nMethod: `GET`\nPath: `/api/notifications`\nAuth: Bearer `{{token}}`\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "notifications"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get unread notification count",
+          "request": {
+            "method": "GET",
+            "description": "Get unread notification count\n\nMethod: `GET`\nPath: `/api/notifications/unread-count`\nAuth: Bearer `{{token}}`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/unread-count",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "notifications",
+                "unread-count"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mark one notification as read",
+          "request": {
+            "method": "PATCH",
+            "description": "Mark one notification as read\n\nMethod: `PATCH`\nPath: `/api/notifications/{id}/read`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/{{id}}/read",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "notifications",
+                "{{id}}",
+                "read"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mark all notifications as read",
+          "request": {
+            "method": "PATCH",
+            "description": "Mark all notifications as read\n\nMethod: `PATCH`\nPath: `/api/notifications/mark-all-read`\nAuth: Bearer `{{token}}`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/mark-all-read",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "notifications",
+                "mark-all-read"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete a notification",
+          "request": {
+            "method": "DELETE",
+            "description": "Delete a notification\n\nMethod: `DELETE`\nPath: `/api/notifications/{id}`\nAuth: Bearer `{{token}}`\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "notifications",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
         }
-      }
+      ]
+    },
+    {
+      "name": "Files",
+      "description": {
+        "type": "text/markdown",
+        "content": "Multer + Cloudinary uploads"
+      },
+      "item": [
+        {
+          "name": "Upload a file",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json?.data?._id) pm.collectionVariables.set(\"contextId\", json?.data?._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "description": "Upload a file\n\nMethod: `POST`\nPath: `/api/files/upload`\nAuth: Bearer `{{token}}`\n\nBody: `multipart/form-data`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "{{filePath}}",
+                  "description": ""
+                },
+                {
+                  "key": "contextType",
+                  "type": "text",
+                  "value": "profile",
+                  "description": ""
+                },
+                {
+                  "key": "contextId",
+                  "type": "text",
+                  "value": "{{contextId}}",
+                  "description": ""
+                },
+                {
+                  "key": "label",
+                  "type": "text",
+                  "value": "Project brief",
+                  "description": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/files/upload",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "files",
+                "upload"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "description": {
+        "type": "text/markdown",
+        "content": "Student moderation reports"
+      },
+      "item": [
+        {
+          "name": "Submit a moderation report",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json?.data?._id) pm.collectionVariables.set(\"reportId\", json?.data?._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "description": "Submit a moderation report\n\nMethod: `POST`\nPath: `/api/reports`\nAuth: Bearer `{{token}}`\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"targetType\": \"user\",\n  \"targetId\": \"{{targetUserId}}\",\n  \"reason\": \"Abusive content\",\n  \"description\": \"The message contains harassment.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/reports",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List my submitted reports",
+          "request": {
+            "method": "GET",
+            "description": "List my submitted reports\n\nMethod: `GET`\nPath: `/api/reports`\nAuth: Bearer `{{token}}`\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/reports",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "description": {
+        "type": "text/markdown",
+        "content": "Admin dashboard, moderation, analytics, and settings"
+      },
+      "item": [
+        {
+          "name": "Get admin dashboard summary",
+          "request": {
+            "method": "GET",
+            "description": "Get admin dashboard summary\n\nMethod: `GET`\nPath: `/api/admin/dashboard`\nAuth: Bearer `{{adminToken}}`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/dashboard",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "dashboard"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get admin analytics data",
+          "request": {
+            "method": "GET",
+            "description": "Get admin analytics data\n\nMethod: `GET`\nPath: `/api/admin/analytics`\nAuth: Bearer `{{adminToken}}`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/analytics",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "analytics"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List audit logs",
+          "request": {
+            "method": "GET",
+            "description": "List audit logs\n\nMethod: `GET`\nPath: `/api/admin/audit-logs`\nAuth: Bearer `{{adminToken}}`\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`\n- `action`, sample: `sample`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/audit-logs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "audit-logs"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "action",
+                  "value": "sample",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List all users",
+          "request": {
+            "method": "GET",
+            "description": "List all users\n\nMethod: `GET`\nPath: `/api/admin/users`\nAuth: Bearer `{{adminToken}}`\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`\n- `search`, sample: `sample`\n- `role`, sample: `student`\n- `isSuspended`, sample: `true`\n- `sortBy`, sample: `-createdAt`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "sample",
+                  "description": ""
+                },
+                {
+                  "key": "role",
+                  "value": "student",
+                  "description": ""
+                },
+                {
+                  "key": "isSuspended",
+                  "value": "true",
+                  "description": ""
+                },
+                {
+                  "key": "sortBy",
+                  "value": "-createdAt",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get single user",
+          "request": {
+            "method": "GET",
+            "description": "Get single user\n\nMethod: `GET`\nPath: `/api/admin/users/{id}`\nAuth: Bearer `{{adminToken}}`\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete user",
+          "request": {
+            "method": "DELETE",
+            "description": "Delete user\n\nMethod: `DELETE`\nPath: `/api/admin/users/{id}`\nAuth: Bearer `{{adminToken}}`\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get user activity summary",
+          "request": {
+            "method": "GET",
+            "description": "Get user activity summary\n\nMethod: `GET`\nPath: `/api/admin/users/{id}/activity`\nAuth: Bearer `{{adminToken}}`\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users/{{id}}/activity",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users",
+                "{{id}}",
+                "activity"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Suspend user",
+          "request": {
+            "method": "PATCH",
+            "description": "Suspend user\n\nMethod: `PATCH`\nPath: `/api/admin/users/{id}/suspend`\nAuth: Bearer `{{adminToken}}`\n\nPath parameters:\n- `id` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Abusive behavior in project chat\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users/{{id}}/suspend",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users",
+                "{{id}}",
+                "suspend"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unsuspend user",
+          "request": {
+            "method": "PATCH",
+            "description": "Unsuspend user\n\nMethod: `PATCH`\nPath: `/api/admin/users/{id}/unsuspend`\nAuth: Bearer `{{adminToken}}`\n\nPath parameters:\n- `id` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Detailed reason for this action\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users/{{id}}/unsuspend",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users",
+                "{{id}}",
+                "unsuspend"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mark a user as verified",
+          "request": {
+            "method": "PATCH",
+            "description": "Mark a user as verified\n\nMethod: `PATCH`\nPath: `/api/admin/users/{id}/verify`\nAuth: Bearer `{{adminToken}}`\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users/{{id}}/verify",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users",
+                "{{id}}",
+                "verify"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset a user's password",
+          "request": {
+            "method": "PATCH",
+            "description": "Reset a user's password\n\nMethod: `PATCH`\nPath: `/api/admin/users/{id}/reset-password`\nAuth: Bearer `{{adminToken}}`\n\nPath parameters:\n- `id` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"NewPassword@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users/{{id}}/reset-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users",
+                "{{id}}",
+                "reset-password"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List all projects",
+          "request": {
+            "method": "GET",
+            "description": "List all projects\n\nMethod: `GET`\nPath: `/api/admin/projects`\nAuth: Bearer `{{adminToken}}`\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`\n- `search`, sample: `sample`\n- `status`, sample: `open`\n- `category`, sample: `{{categoryId}}`\n- `sortBy`, sample: `sample`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/projects",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "projects"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "sample",
+                  "description": ""
+                },
+                {
+                  "key": "status",
+                  "value": "open",
+                  "description": ""
+                },
+                {
+                  "key": "category",
+                  "value": "{{categoryId}}",
+                  "description": ""
+                },
+                {
+                  "key": "sortBy",
+                  "value": "sample",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get project details",
+          "request": {
+            "method": "GET",
+            "description": "Get project details\n\nMethod: `GET`\nPath: `/api/admin/projects/{id}`\nAuth: Bearer `{{adminToken}}`\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/projects/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "projects",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete project",
+          "request": {
+            "method": "DELETE",
+            "description": "Delete project\n\nMethod: `DELETE`\nPath: `/api/admin/projects/{id}`\nAuth: Bearer `{{adminToken}}`\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/projects/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "projects",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change project status as admin",
+          "request": {
+            "method": "PATCH",
+            "description": "Change project status as admin\n\nMethod: `PATCH`\nPath: `/api/admin/projects/{id}/status`\nAuth: Bearer `{{adminToken}}`\n\nPath parameters:\n- `id` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"open\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/projects/{{id}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "projects",
+                "{{id}}",
+                "status"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List reports",
+          "request": {
+            "method": "GET",
+            "description": "List reports\n\nMethod: `GET`\nPath: `/api/admin/reports`\nAuth: Bearer `{{adminToken}}`\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`\n- `status`, sample: `pending`\n- `targetType`, sample: `user`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/reports",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "reports"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "status",
+                  "value": "pending",
+                  "description": ""
+                },
+                {
+                  "key": "targetType",
+                  "value": "user",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get report details",
+          "request": {
+            "method": "GET",
+            "description": "Get report details\n\nMethod: `GET`\nPath: `/api/admin/reports/{id}`\nAuth: Bearer `{{adminToken}}`\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/reports/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "reports",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Resolve a report",
+          "request": {
+            "method": "PATCH",
+            "description": "Resolve a report\n\nMethod: `PATCH`\nPath: `/api/admin/reports/{id}/resolve`\nAuth: Bearer `{{adminToken}}`\n\nPath parameters:\n- `id` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resolutionNote\": \"Reviewed and resolved\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/reports/{{id}}/resolve",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "reports",
+                "{{id}}",
+                "resolve"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Dismiss a report",
+          "request": {
+            "method": "PATCH",
+            "description": "Dismiss a report\n\nMethod: `PATCH`\nPath: `/api/admin/reports/{id}/dismiss`\nAuth: Bearer `{{adminToken}}`\n\nPath parameters:\n- `id` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resolutionNote\": \"Reviewed and resolved\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/reports/{{id}}/dismiss",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "reports",
+                "{{id}}",
+                "dismiss"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Take moderation action on a report",
+          "request": {
+            "method": "PATCH",
+            "description": "Take moderation action on a report\n\nMethod: `PATCH`\nPath: `/api/admin/reports/{id}/action`\nAuth: Bearer `{{adminToken}}`\n\nPath parameters:\n- `id` (required)\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"suspend_user\",\n  \"resolutionNote\": \"Reviewed and resolved\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/reports/{{id}}/action",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "reports",
+                "{{id}}",
+                "action"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List platform settings",
+          "request": {
+            "method": "GET",
+            "description": "List platform settings\n\nMethod: `GET`\nPath: `/api/admin/settings`\nAuth: Bearer `{{adminToken}}`\n\nQuery parameters:\n- `page`, sample: `1`\n- `limit`, sample: `10`\n- `search`, sample: `sample`",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/settings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "settings"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "sample",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create or update a platform setting",
+          "request": {
+            "method": "POST",
+            "description": "Create or update a platform setting\n\nMethod: `POST`\nPath: `/api/admin/settings`\nAuth: Bearer `{{adminToken}}`\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"key\": \"maintenance_mode\",\n  \"value\": true,\n  \"description\": \"description sample\",\n  \"isPublic\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/settings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "settings"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete a platform setting",
+          "request": {
+            "method": "DELETE",
+            "description": "Delete a platform setting\n\nMethod: `DELETE`\nPath: `/api/admin/settings/{id}`\nAuth: Bearer `{{adminToken}}`\n\nPath parameters:\n- `id` (required)",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/settings/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "settings",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send an announcement notification to all users",
+          "request": {
+            "method": "POST",
+            "description": "Send an announcement notification to all users\n\nMethod: `POST`\nPath: `/api/admin/announcements`\nAuth: Bearer `{{adminToken}}`\n\nBody: `application/json`",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Platform maintenance\",\n  \"message\": \"The platform will be unavailable tonight from 11 PM.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/announcements",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "announcements"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Socket.IO Reference",
+      "description": {
+        "type": "text/markdown",
+        "content": "Socket.IO connects to the same origin as the REST API, without the `/api` prefix.\n\nAuth handshake:\n```javascript\nconst socket = io(\"http://localhost:5000\", {\n  auth: { token: pm.collectionVariables.get(\"token\") }\n});\n```\n\nImplemented client events:\n- `join_project_room` `{ projectId }`\n- `leave_project_room` `{ projectId }`\n- `private_message` `{ recipientId, content, attachments? }`\n- `project_message` `{ projectId, content, attachments?, mentions? }`\n- `typing_start` `{ projectId? | recipientId?, conversationId? }`\n- `typing_stop` `{ projectId? | recipientId?, conversationId? }`\n- `mark_as_read` `{ conversationId, messageIds? }`\n- `message_edited` `{ messageId, content }`\n- `message_deleted` `{ messageId }`\n- `presence_update` `{ status }`\n\nImplemented server events:\n- `joined_project_room`\n- `left_project_room`\n- `private_message`\n- `project_message`\n- `typing_start`\n- `typing_stop`\n- `messages_read`\n- `message_edited`\n- `message_deleted`\n- `presence_update`\n- `notification:new`\n- `socket_error`"
+      },
+      "item": []
     }
   ],
   "variable": [
     {
+      "key": "adminRefreshToken",
+      "value": ""
+    },
+    {
+      "key": "adminToken",
+      "value": ""
+    },
+    {
+      "key": "applicationId",
+      "value": "67cf9b5ea7f1e1d4130d91d2"
+    },
+    {
       "key": "baseUrl",
-      "value": "http://localhost:5000/api"
+      "value": "http://localhost:5000"
+    },
+    {
+      "key": "categoryId",
+      "value": "67cf9b5ea7f1e1d4130d91c5"
+    },
+    {
+      "key": "commentId",
+      "value": "67cf9b5ea7f1e1d4130d91d8"
+    },
+    {
+      "key": "contextId",
+      "value": "67cf9b5ea7f1e1d4130d91e1"
+    },
+    {
+      "key": "conversationId",
+      "value": "67cf9b5ea7f1e1d4130d91d4"
+    },
+    {
+      "key": "departmentId",
+      "value": "67cf9b5ea7f1e1d4130d91c2"
+    },
+    {
+      "key": "facultyId",
+      "value": "67cf9b5ea7f1e1d4130d91c1"
+    },
+    {
+      "key": "fileId",
+      "value": "67cf9b5ea7f1e1d4130d91e2"
+    },
+    {
+      "key": "filePath",
+      "value": "/absolute/path/to/file.png"
+    },
+    {
+      "key": "id",
+      "value": "67cf9b5ea7f1e1d4130d91b2"
+    },
+    {
+      "key": "interestId",
+      "value": "67cf9b5ea7f1e1d4130d91c4"
+    },
+    {
+      "key": "invitationId",
+      "value": "67cf9b5ea7f1e1d4130d91d3"
+    },
+    {
+      "key": "invitedUser",
+      "value": "67cf9b5ea7f1e1d4130d91b4"
+    },
+    {
+      "key": "memberUserId",
+      "value": "67cf9b5ea7f1e1d4130d91b4"
+    },
+    {
+      "key": "messageId",
+      "value": "67cf9b5ea7f1e1d4130d91d5"
+    },
+    {
+      "key": "notificationId",
+      "value": "67cf9b5ea7f1e1d4130d91d6"
+    },
+    {
+      "key": "participantId",
+      "value": "67cf9b5ea7f1e1d4130d91b3"
+    },
+    {
+      "key": "projectId",
+      "value": "67cf9b5ea7f1e1d4130d91d1"
+    },
+    {
+      "key": "recipientId",
+      "value": "67cf9b5ea7f1e1d4130d91b3"
+    },
+    {
+      "key": "refreshToken",
+      "value": ""
+    },
+    {
+      "key": "reportId",
+      "value": "67cf9b5ea7f1e1d4130d91d9"
+    },
+    {
+      "key": "requiredSkillId",
+      "value": ""
+    },
+    {
+      "key": "settingId",
+      "value": "67cf9b5ea7f1e1d4130d91e0"
+    },
+    {
+      "key": "skillId",
+      "value": "67cf9b5ea7f1e1d4130d91c3"
+    },
+    {
+      "key": "targetUserId",
+      "value": "67cf9b5ea7f1e1d4130d91b3"
+    },
+    {
+      "key": "taskId",
+      "value": "67cf9b5ea7f1e1d4130d91d7"
     },
     {
       "key": "token",
       "value": ""
     },
     {
-      "key": "categoryId",
-      "value": ""
+      "key": "userId",
+      "value": "67cf9b5ea7f1e1d4130d91b2"
     }
   ]
 }
