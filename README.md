@@ -163,6 +163,38 @@ Implemented events include:
 - `EMAIL_*`
 - `CLOUDINARY_*`
 
+## Render Keep-Alive
+
+Render can suspend an inactive web service, which means a timer running inside that same web service cannot keep it awake. The keep-alive logic has to run from a separate process that continues running after the web service goes idle.
+
+This repo includes a standalone script at [scripts/renderKeepAlive.js](/Users/chinex/Apps/collabi-backend/scripts/renderKeepAlive.js) for that purpose.
+
+Set these variables for the keep-alive process:
+
+- `KEEP_ALIVE_URL=https://your-service.onrender.com/health`
+- `KEEP_ALIVE_INTERVAL_MINUTES=14`
+- `KEEP_ALIVE_TIMEOUT_MS=10000`
+- `KEEP_ALIVE_LOOP=false`
+
+Run it once:
+
+```bash
+npm run keep-alive
+```
+
+Run it continuously from a separate worker or another machine:
+
+```bash
+KEEP_ALIVE_LOOP=true npm run keep-alive
+```
+
+Recommended Render setup:
+
+- Keep your current web service unchanged.
+- Create a separate Render Cron Job that runs every 14 minutes.
+- Use `npm run keep-alive` as the start command.
+- Set `KEEP_ALIVE_URL` to your deployed `/health` endpoint.
+
 ## Notes
 
 - The code is structured to be understandable for a university project while still reflecting production patterns.
