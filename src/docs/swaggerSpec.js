@@ -211,7 +211,11 @@ const buildSwaggerSpec = () => {
       {
         url: `http://localhost:${localPort}`,
         description: "Local development server"
-      }
+      },
+      {
+        url: `https://collabi-backend.onrender.com`,
+        description: "Production server"
+      },
     ],
     tags: [
       { name: "Health", description: "Service health checks" },
